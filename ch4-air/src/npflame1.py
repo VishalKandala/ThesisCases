@@ -3,8 +3,7 @@
 #
 #    This script computes an atmospheric-pressure methane/air
 #    counterflow flame using GRI-Mech 3.0.
-#    Run time on a Mac G4: ~ 5 minutes
-#
+
 from Cantera import *
 from Cantera.OneD import *
 from Cantera.OneD.CounterFlame import CounterFlame
@@ -27,7 +26,7 @@ comp_f       =  'CH4:1';                      # fuel composition
 
 # distance between inlets is 2 cm; start with an evenly-spaced 50-point
 # grid
-grid_iterations=[25,50]#,100,200]
+grid_iterations=[25,50,100,200]
 
 tol_ss    = [1.0e-5, 1.0e-9]        # [rtol, atol] for steady-state
                                     # problem
@@ -37,7 +36,11 @@ loglevel  = 1                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 0                     # 1 to enable refinement, 0 to
 
-plt.title("Temperature Profile of Methane air Diffusion flame")
+T-profile=plt.figure(1)
+T-profile.title("Temperature Profile of Methane air Diffusion flame")
+
+u-profile=plt.figure(2)
+u-profile.title("Velocity Profile of Methane air Diffusion flame")
 
 for i in range(len(grid_iterations)):
 
@@ -125,12 +128,22 @@ for i in range(len(grid_iterations)):
 
 	f.showSolution()
 	f.showStats()
-	plt.plot(z,T,label='n='+str(grid_iterations[i]))
-
-plt.xlim(0.000, 0.020)
-plt.grid(True)
-plt.ylim(0,2500)
-plt.xlabel('Z(m)')
-plt.ylabel('T(K)')
-plt.legend()
-plt.savefig('../plots/zvT.png')
+	T-profile.plot(z,T,label='n='+str(grid_iterations[i]))
+	u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
+	
+##########################
+T-profile.xlim(0.000, 0.020)
+T-profile.grid(True)
+T-profile.ylim(0,2500)
+T-profile.xlabel('Z(m)')
+T-profile.ylabel('T(K)')
+T-profile.legend()
+T-profile.savefig('../plots/zvT.png')
+###########################
+u-profile.xlim(0.000, 0.020)
+u-profile.grid(True)
+u-profile.ylim(0,2500)
+u-profile.xlabel('Z(m)')
+u-profile.ylabel('T(K)')
+u-profile.legend()
+u-profile.savefig('../plots/zvu.png')
