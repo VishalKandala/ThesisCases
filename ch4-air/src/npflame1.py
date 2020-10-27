@@ -119,6 +119,12 @@ print 'solution saved to npflame1.csv'
 f.showSolution()
 f.showStats()
 
-
+temperatureplot=plt.figure()
+plt.title("Temperature Profile of Methane air Diffusion flame")
 plt.plot(z,T)
+plt.xlim(0.000, 0.020)
+plt.grid(True)
+plt.ylim(0,2500)
+plt.xlabel('Z(m)')
+plt.ylabel('T(K)')
 plt.savefig('../plots/zvT.png')
