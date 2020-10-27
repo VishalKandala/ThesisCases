@@ -27,7 +27,7 @@ comp_f       =  'CH4:1';                      # fuel composition
 
 # distance between inlets is 2 cm; start with an evenly-spaced 50-point
 # grid
-grid_iterations=[25,50,100,200]
+grid_iterations=[25,50]#,100,200]
 
 tol_ss    = [1.0e-5, 1.0e-9]        # [rtol, atol] for steady-state
                                     # problem
@@ -112,14 +112,16 @@ for i in range(len(grid_iterations)):
 	T = f.T()
 	u = f.u()
 	V = f.V()
-	fcsv = open('../results/npflame1_'+str(grid_iterations[i]+'.csv',
-	writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)']+list(gas.speciesNames()))
-	for n in range(f.flame.nPoints()):
-    		f.setGasState(n)
-    		writeCSV(fcsv, [z[n], u[n], V[n], T[n]]+list(gas.moleFractions()))
-		fcsv.close()
-		
-	print 'solution saved to npflame1.csv'
+	results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
+	filename='../results/npflame1_'+str(grid_iterations[i])+'.csv'
+	np.savetxt(filename, results, delimiter=',')
+#	fcsv = open('../results/npflame1_'+str(grid_iterations[i]+'.csv',
+#	writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)']+list(gas.speciesNames()))
+#	for n in range(f.flame.nPoints()):
+#    		f.setGasState(n)
+#    		writeCSV(fcsv, [z[n], u[n], V[n], T[n]]+list(gas.moleFractions()))
+#		fcsv.close()
+	print 'solution saved to :'+filename
 
 	f.showSolution()
 	f.showStats()
