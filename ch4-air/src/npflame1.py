@@ -18,7 +18,8 @@ import matplotlib.pyplot as plt
 p          =   OneAtm               # pressure
 tin_f      =   300.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
-mdot_o     =   0.72                 # kg/m^2/s
+phi	   =   0.5
+mdot_o     =  phi* 0.72                 # kg/m^2/s
 mdot_f     =   0.24                 # kg/m^2/s
 
 comp_o       =  'O2:0.21, N2:0.78, AR:0.01';   # air composition
@@ -26,7 +27,7 @@ comp_f       =  'CH4:1';                      # fuel composition
 
 # distance between inlets is 2 cm; start with an evenly-spaced 25-point
 # grid
-initial_grid = 0.02*np.linspace(0,1,num=25)
+initial_grid = np.linspace(0,0.02,num=25)
 
 
 tol_ss    = [1.0e-5, 1.0e-9]        # [rtol, atol] for steady-state
@@ -36,7 +37,7 @@ tol_ts    = [1.0e-3, 1.0e-9]        # [rtol, atol] for time stepping
 loglevel  = 1                       # amount of diagnostic output (0
                                     # to 5)
 				    
-refine_grid = 1                     # 1 to enable refinement, 0 to
+refine_grid = 0                     # 1 to enable refinement, 0 to
                                     # disable 				   
 
 
@@ -114,12 +115,12 @@ for n in range(f.flame.nPoints()):
     f.setGasState(n)
     writeCSV(fcsv, [z[n], u[n], V[n], T[n]]+list(gas.moleFractions()))
 fcsv.close()
-
+		
 print 'solution saved to npflame1.csv'
 
 f.showSolution()
 f.showStats()
 
+
 plt.plot(z,T)
 plt.savefig('../plots/zvT.png')
-
