@@ -36,11 +36,11 @@ loglevel  = 1                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 0                     # 1 to enable refinement, 0 to
 
-Tprofile=plt.figure(1)
-Tprofile.title("Temperature Profile of Methane air Diffusion flame")
+fig,ax=plt.subplots()
+ax.set_title("Temperature Profile of Methane air Diffusion flame")
 
-uprofile=plt.figure(2)
-uprofile.title("Velocity Profile of Methane air Diffusion flame")
+#uprofile=plt.figure(2)
+#uprofile.set_title("Velocity Profile of Methane air Diffusion flame")
 
 for i in range(len(grid_iterations)):
 
@@ -128,22 +128,23 @@ for i in range(len(grid_iterations)):
 
 	f.showSolution()
 	f.showStats()
-	T-profile.plot(z,T,label='n='+str(grid_iterations[i]))
-	u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
+	ax.plot(z,T,label='n='+str(grid_iterations[i]))
+	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
 	
 ##########################
-Tprofile.xlim(0.000, 0.020)
-Tprofile.grid(True)
-Tprofile.ylim(0,2500)
-Tprofile.xlabel('Z(m)')
-Tprofile.ylabel('T(K)')
-Tprofile.legend()
-Tprofile.savefig('../plots/zvT.png')
+ax.set_xlim(0.000, 0.020)
+plt.grid(True)
+ax.set_ylim(0,2500)
+ax.set_xlabel('Z(m)')
+ax.set_ylabel('T(K)')
+ax.legend()
+plt.savefig('../plots/zvT.png')
 ###########################
-uprofile.xlim(0.000, 0.020)
+'''
+uprofile.set_xlim(0.000, 0.020)
 uprofile.grid(True)
-uprofile.ylim(0,2500)
-uprofile.xlabel('Z(m)')
-uprofile.ylabel('T(K)')
+uprofile.set_ylim(0,2500)
+uprofile.set_xlabel('Z(m)')
+uprofile.set_ylabel('T(K)')
 uprofile.legend()
-uprofile.savefig('../plots/zvu.png')
+uprofile.savefig('../plots/zvu.png')'''
