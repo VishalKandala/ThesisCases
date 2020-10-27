@@ -112,9 +112,8 @@ for i in range(len(grid_iterations)):
 	T = f.T()
 	u = f.u()
 	V = f.V()
-	fcsv = open('../results/npflame1.csv','w')
-	writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)']
-         + list(gas.speciesNames()))
+	fcsv = open('../results/npflame1_'+str(grid_iterations[i]+'.csv',
+	writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)']+list(gas.speciesNames()))
 	for n in range(f.flame.nPoints()):
     		f.setGasState(n)
     		writeCSV(fcsv, [z[n], u[n], V[n], T[n]]+list(gas.moleFractions()))
