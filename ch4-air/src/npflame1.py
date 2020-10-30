@@ -10,6 +10,7 @@ from Cantera.OneD.CounterFlame import CounterFlame
 from Cantera.num import array
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 # parameter values
 #
 # These are grouped here to simplify changing flame conditions
@@ -33,7 +34,7 @@ tol_ts    = [1.0e-3, 1.0e-9]        # [rtol, atol] for time stepping
 
 loglevel  = 1                       # amount of diagnostic output (0
                                     # to 5)				    
-refine_grid = 0                     # 1 to enable refinement, 0 to
+refine_grid = 0                     # 1 to enable refinement, 0 to disable.
 
 fig,ax=plt.subplots()
 ax.set_title("Temperature Profile of Methane air Diffusion flame")
@@ -46,6 +47,7 @@ ax.set_title("Temperature Profile of Methane air Diffusion flame")
 #h.equilibrate('HP')
 #print(h.temperature())
 
+comptime=[]
 
 for i in range(len(grid_iterations)):
 
@@ -93,11 +95,12 @@ for i in range(len(grid_iterations)):
 	f.init(fuel = 'CH4')
 
 # show the starting estimate
-	f.showSolution()
+#	f.showSolution()
 
 # First disable the energy equation and solve the problem without
 # refining the grid
 	f.set(energy = 'off')
+	start=time.time()	
 	f.solve(loglevel, 0)
 
 # Now specify grid refinement criteria, turn on the energy equation,
@@ -108,10 +111,11 @@ for i in range(len(grid_iterations)):
 # will be removed if the relative slope and curvature for all
 # components fall below the prune level. Set prune < min(slope,
 # curve), or to zero to disable removing grid points.
-	f.setRefineCriteria(ratio = 200.0, slope = 0.1, curve = 0.2, prune = 0.02)
+	#f.setRefineCriteria(ratio = 200.0, slope = 0.1, curve = 0.2, prune = 0.02)
 	f.set(energy = 'on')
-	f.solve(1)
-
+	f.solve(0)
+	elapsed=time.time()-start
+	comptime.append([grid_iterations[i],elapsed])
 # Save the solution
 	f.save('../results/npflame1.xml')
 
@@ -121,7 +125,7 @@ for i in range(len(grid_iterations)):
 	u = f.u()
 	V = f.V()
 	results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
-	filename='../results/npflame1_'+str(grid_iterations[i])+'.csv'
+	filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
 	np.savetxt(filename, results, delimiter=',')
 #	fcsv = open('../results/npflame1_'+str(grid_iterations[i]+'.csv',
 #	writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)']+list(gas.speciesNames()))
@@ -131,11 +135,11 @@ for i in range(len(grid_iterations)):
 #		fcsv.close()
 	print 'solution saved to :'+filename
 
-	f.showSolution()
-	f.showStats()
+	#f.showSolution()
+	#f.showStats()
 	ax.plot(z,T,label='n='+str(grid_iterations[i]))
 	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
-	
+print(comptime)	
 ##########################
 ax.set_xlim(0.000, 0.020)
 plt.grid(True)
