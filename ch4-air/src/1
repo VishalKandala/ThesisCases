@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 # parameter values
 #
 # These are grouped here to simplify changing flame conditions
+
 p          =   OneAtm               # pressure
 tin_f      =   300.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
@@ -35,18 +36,17 @@ loglevel  = 1                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 0                     # 1 to enable refinement, 0 to
 
-fig,ax=plt.subplots()
-ax.set_title("Temperature Profile of Methane air Diffusion flame")
+#fig,ax=plt.subplots(nrows=2)
+#ax.set_title("Temperature Profile of Methane air Diffusion flame")
 
 #uprofile=plt.figure(2)
 #uprofile.set_title("Velocity Profile of Methane air Diffusion flame")
 
-#h=GRI30()
-#h.set(T=tin_f,P=p,X=comp_o+comp_f) #'CH4:0.5, O2:0.105,N2:0.39,AR:0.005')
-#h.equilibrate('HP')
-#print(h.temperature())
-
-
+h=Solution('gri30.xml')
+h.TPX=tin_f,p,str(comp_f+comp_o)
+#h.equilibrate('TP')
+print(h)
+'''
 for i in range(len(grid_iterations)):
 
 	initial_grid = np.linspace(0,0.02,num=grid_iterations[i])
@@ -145,7 +145,7 @@ ax.set_ylabel('T(K)')
 ax.legend()
 plt.savefig('../plots/zvT.png')
 ###########################
-'''
+
 uprofile.set_xlim(0.000, 0.020)
 uprofile.grid(True)
 uprofile.set_ylim(0,2500)
