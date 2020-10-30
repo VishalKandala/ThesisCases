@@ -14,25 +14,25 @@ import time
 # parameter values
 #
 # These are grouped here to simplify changing flame conditions
-p          =   OneAtm               # pressure
+p          =   10*OneAtm               # pressure
 tin_f      =   300.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
 phi	   =   0.5		    # Equivalence Ratio
 mdot_o     =   1#16.865                    # kg/m^2/s
 mdot_f     =   1                    # kg/m^2/s
 
-comp_o       =  'O2:1';   # air composition
+comp_o       =  'O2:1';  			 # air composition
 comp_f       =  'H2:1';                      # fuel composition
 
 # distance between inlets is 2 cm; start with an evenly-spaced 50-point
 # grid
-grid_iterations=[25,50,100,200]
+grid_iterations=[50]
 
-tol_ss    = [1.0e-5, 1.0e-9]        # [rtol, atol] for steady-state
+tol_ss    = [1.0e-4, 1.0e-9]        # [rtol, atol] for steady-state
                                     # problem
 tol_ts    = [1.0e-3, 1.0e-9]        # [rtol, atol] for time stepping
 
-loglevel  = 1                       # amount of diagnostic output (0
+loglevel  = 5                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 0                     # 1 to enable refinement, 0 to disable.
 
@@ -51,9 +51,7 @@ comptime=[]
 
 for i in range(len(grid_iterations)):
 
-	initial_grid = np.linspace(0,0.02,num=grid_iterations[i])
-
-                                   # disable 				   
+	initial_grid = np.linspace(0,0.02,num=grid_iterations[i])  				   
 
 ################ create the gas object ########################
 #
@@ -92,7 +90,7 @@ for i in range(len(grid_iterations)):
 # to specify the fuel species. If a fuel mixture is being used,
 # specify a representative species here for the purpose of
 # constructing an initial guess.
-	f.init(fuel = 'CH4')
+	f.init(fuel = 'H2')
 
 # show the starting estimate
 #	f.showSolution()
@@ -101,7 +99,8 @@ for i in range(len(grid_iterations)):
 # refining the grid
 	f.set(energy = 'off')
 	start=time.time()	
-	f.solve(loglevel, refine_grid)
+	f.solve(loglevel, 0)
+	f.strain_rate(max, fuel='H2',oxidizer='O2')
 
 # Now specify grid refinement criteria, turn on the energy equation,
 # and solve the problem again. The ratio parameter controls the
@@ -143,7 +142,7 @@ print(comptime)
 ##########################
 ax.set_xlim(0.000, 0.020)
 plt.grid(True)
-ax.set_ylim(0,2500)
+ax.set_ylim(0,4000)
 ax.set_xlabel('Z(m)')
 ax.set_ylabel('T(K)')
 ax.legend()
