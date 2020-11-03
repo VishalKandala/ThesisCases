@@ -143,11 +143,11 @@ print(comptime)
 ##########################
 ax.set_xlim(0.000, 0.020)
 plt.grid(True)
-ax.set_ylim(0,2500)
+#ax.set_ylim(0,2500)
 ax.set_xlabel('Z(m)')
 ax.set_ylabel('T(K)')
 ax.legend()
-plt.savefig('../plots/zvT.png')
+plt.savefig('../plots/zvU.png')
 ###########################
 '''
 uprofile.set_xlim(0.000, 0.020)
