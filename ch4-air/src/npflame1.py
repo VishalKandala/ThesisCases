@@ -18,7 +18,7 @@ p          =   OneAtm               # pressure
 tin_f      =   300.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
 phi	   =   0.5		    # Equivalence Ratio
-mdot_o     =   1#16.865                    # kg/m^2/s
+mdot_o     =   1 #16.865            # kg/m^2/s
 mdot_f     =   1                    # kg/m^2/s
 
 comp_o       =  'O2:0.21, N2:0.78, AR:0.01';   # air composition
@@ -26,7 +26,7 @@ comp_f       =  'CH4:1';                      # fuel composition
 
 # distance between inlets is 2 cm; start with an evenly-spaced 50-point
 # grid
-grid_iterations=[25,50,100,200]
+grid_iterations=[25]#,50,100,200]
 
 tol_ss    = [1.0e-5, 1.0e-9]        # [rtol, atol] for steady-state
                                     # problem
@@ -102,7 +102,6 @@ for i in range(len(grid_iterations)):
 	f.set(energy = 'off')
 	start=time.time()	
 	f.solve(loglevel, 0)
-
 # Now specify grid refinement criteria, turn on the energy equation,
 # and solve the problem again. The ratio parameter controls the
 # maximum size ratio between adjacent cells; slope and curve should be
@@ -118,12 +117,13 @@ for i in range(len(grid_iterations)):
 	comptime.append([grid_iterations[i],elapsed])
 # Save the solution
 	f.save('../results/npflame1.xml')
-
+	
 # write the velocity, temperature, and mole fractions to a CSV file
 	z = f.flame.grid()
 	T = f.T()
 	u = f.u()
 	V = f.V()
+
 	results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
 	filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
 	np.savetxt(filename, results, delimiter=',')
@@ -137,7 +137,7 @@ for i in range(len(grid_iterations)):
 
 	#f.showSolution()
 	#f.showStats()
-	ax.plot(z,T,label='n='+str(grid_iterations[i]))
+	ax.plot(z,u,label='n='+str(grid_iterations[i]))
 	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
 print(comptime)	
 ##########################
