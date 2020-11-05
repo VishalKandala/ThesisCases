@@ -126,7 +126,7 @@ for i in range(len(grid_iterations)):
 	
 	umean=(np.sum(u)/len(u))	
 	strain_rate=umean/dx
-	print('mean strain rate'+str(strain_rate))
+	#print('mean strain rate'+str(strain_rate))
 
 	results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
 	filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
@@ -141,12 +141,13 @@ for i in range(len(grid_iterations)):
 
 	#f.showSolution()
 	#f.showStats()
-	ax.plot(z,u,label='n='+str(grid_iterations[i]))
+	ax.plot(z,u,label='u')#label='n='+str(grid_iterations[i]))
+	ax.plot(z,T,label='T')
 	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
 
 print(comptime)	
 ##########################
-ax.set_xlim(0.000, 0.020)
+#ax.set_xlim(0.000, 0.020)
 plt.grid(True)
 #ax.set_ylim(0,2500)
 ax.set_xlabel('Z(m)')
