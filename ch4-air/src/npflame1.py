@@ -18,21 +18,22 @@ p          =   OneAtm               # pressure
 tin_f      =   300.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
 phi	   =   0.5		    # Equivalence Ratio
-mdot_o     =   1 #16.865            # kg/m^2/s
-mdot_f     =   1                    # kg/m^2/s
+mdot_o     =   0.084 #16.865            # kg/m^2/s
+mdot_f     =   0.084                    # kg/m^2/s
 
-comp_o       =  'O2:0.21, N2:0.78, AR:0.01';   # air composition
-comp_f       =  'CH4:1';                      # fuel composition
+comp_o     =  'O2:0.21, N2:0.78, AR:0.01';   # air composition
+comp_f     =  'CH4:1';                      # fuel composition
 
-# distance between inlets is 2 cm; start with an evenly-spaced 50-point
+flange_length = 0.0195  
+# distance between inlets is 5 cm; start with an evenly-spaced 50-point
 # grid
-grid_iterations=[25]#,50,100,200]
+grid_iterations=[50]#,50,100,200]
 
 tol_ss    = [1.0e-5, 1.0e-9]        # [rtol, atol] for steady-state
                                     # problem
 tol_ts    = [1.0e-3, 1.0e-9]        # [rtol, atol] for time stepping
 
-loglevel  = 1                       # amount of diagnostic output (0
+loglevel  = 0                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 0                     # 1 to enable refinement, 0 to disable.
 
@@ -51,10 +52,9 @@ comptime=[]
 
 for i in range(len(grid_iterations)):
 
-	initial_grid = np.linspace(0,0.02,num=grid_iterations[i])
-
+	initial_grid = np.linspace(0,1,num=grid_iterations[i])*flange_length
+	dx=flange_length/len(initial_grid)
                                    # disable 				   
-
 ################ create the gas object ########################
 #
 # This object will be used to evaluate all thermodynamic, kinetic,
@@ -123,6 +123,10 @@ for i in range(len(grid_iterations)):
 	T = f.T()
 	u = f.u()
 	V = f.V()
+	
+	umean=(np.sum(u)/len(u))	
+	strain_rate=umean/dx
+	print('mean strain rate'+str(strain_rate))
 
 	results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
 	filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
@@ -139,6 +143,7 @@ for i in range(len(grid_iterations)):
 	#f.showStats()
 	ax.plot(z,u,label='n='+str(grid_iterations[i]))
 	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
+
 print(comptime)	
 ##########################
 ax.set_xlim(0.000, 0.020)
