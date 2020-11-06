@@ -29,12 +29,13 @@ comp_f     =  'CH4:1';                      # fuel composition
 flange_length = 0.02 
 
 alpha_0=((mdot_o/rho_o)+(mdot_f/rho_f))/(flange_length)
-alpha_o=(mdot_o/rho_o)*(1+((mdot_f/mdot_o)*((rho_o/rho_f)**0.5)))
-print(alpha_0)
-print(alpha_o) 
-# distance between inlets is 5 cm; start with an evenly-spaced 50-point
+alpha_o=((mdot_o/rho_o)*(1+((mdot_f/mdot_o)*((rho_o/rho_f)**0.5))))/flange_length
+print('Alpha_0:'+str(alpha_0))
+print('Alpha_ox:'+str(alpha_o)) 
+# distance between inlets is 2 cm; start with an evenly-spaced 50-point
 # grid
-grid_iterations=[40]#,50,100,200]
+
+grid_iterations=[35]#,50,100,200]
 
 tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
@@ -159,23 +160,16 @@ for i in range(len(grid_iterations)):
 #print(f.componentNames())
 ##########################
 ax1.set_xlim(0.000, 0.020)
-plt.grid(True)
 ax1.set_ylim(0,2500)
-ax1.set_xlabel('Z(m)')
+#ax1.set_xlabel('Z(m)')
 ax1.set_ylabel('T(K)')
-ax1.legend()
 ax2.set_xlim(0.000, 0.020)
-plt.grid(True)
-ax2.set_xlabel('Z(m)')
 ax2.set_ylabel('u(m/s)')
-ax2.legend()
+ax3.set_ylabel('V(1/s)')
+ax3.set_xlim(0.000, 0.020)
+ax1.grid(True)
+ax2.grid(True)
+ax3.grid(True)
 plt.savefig('../plots/zvU.png')
 ###########################
-'''
-uprofile.set_xlim(0.000, 0.020)
-uprofile.grid(True)
-uprofile.set_ylim(0,2500)
-uprofile.set_xlabel('Z(m)')
-uprofile.set_ylabel('T(K)')
-uprofile.legend()
-uprofile.savefig('../plots/zvu.png')'''
+
