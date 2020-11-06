@@ -21,11 +21,13 @@ tin_o      =   300.0                # oxidizer inlet temperature
 phi	   =   1.8		    # Equivalence Ratio     
 rho_o	   =   1.177		    # Kg/m^3 @ 300K
 mdot_f     =   0.084                # kg/m^2/s
-rho_f      =   0.657                # Kg/m^3 @ 294K
-mdot_o     =   2*mdot_f/phi	    # Kg/m^2/s
+rho_f      =   (0.657*(phi/(2+phi)))+(rho_o*2/(2+phi))                # Kg/m^3 @ 294K
+#mdot_o_np     =   2*mdot_f/phi	    # Kg/m^2/s
+mdot_o     =  0.084                 # Kg/m^2/s
+aircomp=[0.21,0.78,0.01]
 comp_o     =  'O2:0.21, N2:0.78, AR:0.01';  # air composition
-comp_f     =  'CH4:1';                      # fuel composition
-
+comp_f     =  'CH4:'+str(phi/(2+phi))+', O2:'+str(2*aircomp[0]/(2+phi))+', N2:'+str(2*aircomp[1]/(2+phi))+', AR:'+str(2*aircomp[2]/(2+phi))                      # fuel composition
+print(comp_f)
 flange_length = 0.02 
 
 alpha_0=((mdot_o/rho_o)+(mdot_f/rho_f))/(flange_length)
@@ -49,11 +51,6 @@ fig, (ax1,ax2,ax3)=plt.subplots(3)
 #ax1.set_title("Temperature Profile")
 #ax2.set_title("Velocity Profile")
 #ax3.set_title("Concentration Profile")
-
-#h=GRI30()
-#h.set(T=tin_f,P=p,X=comp_o+comp_f) #'CH4:0.5, O2:0.105,N2:0.39,AR:0.005')
-#h.equilibrate('HP')
-#print(h.temperature())
 
 comptime=[]
 
@@ -172,4 +169,3 @@ ax2.grid(True)
 ax3.grid(True)
 plt.savefig('../plots/zvU.png')
 ###########################
-
