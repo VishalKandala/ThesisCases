@@ -11,37 +11,36 @@ from Cantera.num import array
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+
 # parameter values
 #
 # These are grouped here to simplify changing flame conditions
 p          =   OneAtm               # pressure
-tin_f      =   300.0                # fuel inlet temperature
+tin_f      =   294.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
-phi	   =   0.5		    # Equivalence Ratio
-mdot_o     =   0.084 #16.865            # kg/m^2/s
-mdot_f     =   0.084                    # kg/m^2/s
+#phi	   =   0.5		    # Equivalence Ratio
+mdot_o     =   0.084           	    # kg/m^2/s
+mdot_f     =   0.084                # kg/m^2/s
 
 comp_o     =  'O2:0.21, N2:0.78, AR:0.01';   # air composition
 comp_f     =  'CH4:1';                      # fuel composition
 
-flange_length = 0.0195  
+flange_length = 0.02  
 # distance between inlets is 5 cm; start with an evenly-spaced 50-point
 # grid
 grid_iterations=[50]#,50,100,200]
 
-tol_ss    = [1.0e-5, 1.0e-9]        # [rtol, atol] for steady-state
+tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
-tol_ts    = [1.0e-3, 1.0e-9]        # [rtol, atol] for time stepping
+tol_ts    = [1.0e-5, 1.0e-2]        # [rtol, atol] for time stepping
 
 loglevel  = 0                       # amount of diagnostic output (0
                                     # to 5)				    
-refine_grid = 0                     # 1 to enable refinement, 0 to disable.
+refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
-fig,ax=plt.subplots()
-ax.set_title("Temperature Profile of Methane air Diffusion flame")
-
-#uprofile=plt.figure(2)
-#uprofile.set_title("Velocity Profile of Methane air Diffusion flame")
+fig, (ax1,ax2)=plt.subplots(2)
+ax1.set_title("Temperature Profile of Methane air Diffusion flame")
+ax2.set_title("Velocity Profile of Methane air Diffusion flame")
 
 #h=GRI30()
 #h.set(T=tin_f,P=p,X=comp_o+comp_f) #'CH4:0.5, O2:0.105,N2:0.39,AR:0.005')
@@ -99,9 +98,10 @@ for i in range(len(grid_iterations)):
 
 # First disable the energy equation and solve the problem without
 # refining the grid
+	f.setRefineCriteria(ratio = 3, slope = 1, curve = 1, prune = 0)	
 	f.set(energy = 'off')
 	start=time.time()	
-	f.solve(loglevel, 0)
+	f.solve(loglevel, 1)
 # Now specify grid refinement criteria, turn on the energy equation,
 # and solve the problem again. The ratio parameter controls the
 # maximum size ratio between adjacent cells; slope and curve should be
@@ -110,11 +110,11 @@ for i in range(len(grid_iterations)):
 # will be removed if the relative slope and curvature for all
 # components fall below the prune level. Set prune < min(slope,
 # curve), or to zero to disable removing grid points.
-	#f.setRefineCriteria(ratio = 200.0, slope = 0.1, curve = 0.2, prune = 0.02)
+	f.setRefineCriteria(ratio = 3, slope = 0.1, curve = 0.1, prune = 0)
 	f.set(energy = 'on')
-	f.solve(0)
-	elapsed=time.time()-start
-	comptime.append([grid_iterations[i],elapsed])
+	f.solve(1)
+	#elapsed=time.time()-start
+	#comptime.append([grid_iterations[i],elapsed])
 # Save the solution
 	f.save('../results/npflame1.xml')
 	
@@ -140,19 +140,24 @@ for i in range(len(grid_iterations)):
 	print 'solution saved to :'+filename
 
 	#f.showSolution()
-	#f.showStats()
-	ax.plot(z,u,label='u')#label='n='+str(grid_iterations[i]))
-	ax.plot(z,T,label='T')
+	f.showStats()
+	ax1.plot(z,u,label='u')#label='n='+str(grid_iterations[i]))
+	ax2.plot(z,T,label='T')
 	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
 
 print(comptime)	
 ##########################
-#ax.set_xlim(0.000, 0.020)
+ax1.set_xlim(0.000, 0.020)
 plt.grid(True)
-#ax.set_ylim(0,2500)
-ax.set_xlabel('Z(m)')
-ax.set_ylabel('T(K)')
-ax.legend()
+ax1.set_ylim(0,2500)
+ax1.set_xlabel('Z(m)')
+ax1.set_ylabel('T(K)')
+ax1.legend()
+ax2.set_xlim(0.000, 0.020)
+plt.grid(True)
+ax2.set_xlabel('Z(m)')
+ax2.set_ylabel('u(m/s)')
+ax2.legend()
 plt.savefig('../plots/zvU.png')
 ###########################
 '''
