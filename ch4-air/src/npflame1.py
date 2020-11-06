@@ -23,8 +23,8 @@ refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
 ###### Grid Initialization ######################################
 d=2*0.01 # flange distance in cm.
-initial_grid=np.linspace(0,1,num=20)*d
-phi_range=[2.2]
+initial_grid=np.linspace(0,1,num=30)*d
+phi_range=[3.17] #[1.8,2.2,3.17]
 # Iterating over  various equivalence ratios
 for i in range(len(phi_range)):
 ############ Flame Parameters ###############################
