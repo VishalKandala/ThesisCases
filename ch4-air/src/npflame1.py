@@ -28,7 +28,7 @@ comp_f     =  'CH4:1';                      # fuel composition
 flange_length = 0.02  
 # distance between inlets is 5 cm; start with an evenly-spaced 50-point
 # grid
-grid_iterations=[50]#,50,100,200]
+grid_iterations=[40]#,50,100,200]
 
 tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
@@ -51,7 +51,8 @@ comptime=[]
 
 for i in range(len(grid_iterations)):
 
-	initial_grid = np.linspace(0,1,num=grid_iterations[i])*flange_length
+	#initial_grid = np.array([0,0.0025,0.005,0.0075,0.008,0.009,0.01,0.0105,0.011,0.0115,0.0120,0.0125,0.01275,0.0130,0.01320,0.01340,0.01360,0.01380,0.0140,0.0141,0.0142,0.0143,0.014,0.0145,0.0146,0.0147,0.0148,0.0149,0.015,0.01525,0.01575,0.016,0.0165,0.017,0.018,0.019,0.020])
+	initial_grid=np.linspace(0,1,num=grid_iterations[i])*flange_length
 	dx=flange_length/len(initial_grid)
                                    # disable 				   
 ################ create the gas object ########################
@@ -141,8 +142,8 @@ for i in range(len(grid_iterations)):
 
 	#f.showSolution()
 	f.showStats()
-	ax1.plot(z,u,label='u')#label='n='+str(grid_iterations[i]))
-	ax2.plot(z,T,label='T')
+	ax2.plot(z,u) #label='u')#label='n='+str(grid_iterations[i]))
+	ax1.plot(z,T) #label='T')
 	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
 
 print(comptime)	
