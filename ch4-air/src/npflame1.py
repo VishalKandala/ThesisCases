@@ -20,12 +20,18 @@ tin_f      =   294.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
 #phi	   =   0.5		    # Equivalence Ratio
 mdot_o     =   0.084           	    # kg/m^2/s
+rho_o	   =   1.177		    # Kg/m^3 @ 300K
 mdot_f     =   0.084                # kg/m^2/s
-
+rho_f      =   0.657                # Kg/m^3 @ 294K
 comp_o     =  'O2:0.21, N2:0.78, AR:0.01';   # air composition
 comp_f     =  'CH4:1';                      # fuel composition
 
-flange_length = 0.02  
+flange_length = 0.02 
+
+alpha_0=((mdot_o/rho_o)+(mdot_f/rho_f))/(flange_length)
+alpha_o=(mdot_o/rho_o)*(1+((mdot_f/mdot_o)*((rho_o/rho_f)**0.5)))
+print(alpha_0)
+print(alpha_o) 
 # distance between inlets is 5 cm; start with an evenly-spaced 50-point
 # grid
 grid_iterations=[40]#,50,100,200]
@@ -38,9 +44,10 @@ loglevel  = 0                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
-fig, (ax1,ax2)=plt.subplots(2)
-ax1.set_title("Temperature Profile of Methane air Diffusion flame")
-ax2.set_title("Velocity Profile of Methane air Diffusion flame")
+fig, (ax1,ax2,ax3)=plt.subplots(3)
+ax1.set_title("Temperature Profile")
+ax2.set_title("Velocity Profile")
+ax3.set_title("Concentration Profile")
 
 #h=GRI30()
 #h.set(T=tin_f,P=p,X=comp_o+comp_f) #'CH4:0.5, O2:0.105,N2:0.39,AR:0.005')
@@ -127,26 +134,29 @@ for i in range(len(grid_iterations)):
 	
 	umean=(np.sum(u)/len(u))	
 	strain_rate=umean/dx
-	#print('mean strain rate'+str(strain_rate))
+	print('mean strain rate'+str(strain_rate))
 
-	results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
-	filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
-	np.savetxt(filename, results, delimiter=',')
-#	fcsv = open('../results/npflame1_'+str(grid_iterations[i]+'.csv',
+	#results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
+	#filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
+	#np.savetxt(filename, results, delimiter=',')
+#	fcsv = open('../results/npflame1_'+str(grid_iterations[i])+'.csv',"w")
 #	writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)']+list(gas.speciesNames()))
 #	for n in range(f.flame.nPoints()):
 #    		f.setGasState(n)
 #    		writeCSV(fcsv, [z[n], u[n], V[n], T[n]]+list(gas.moleFractions()))
 #		fcsv.close()
-	print 'solution saved to :'+filename
+#	print 'solution saved to :'+filename
 
-	#f.showSolution()
+	f.showSolution()
 	f.showStats()
-	ax2.plot(z,u) #label='u')#label='n='+str(grid_iterations[i]))
-	ax1.plot(z,T) #label='T')
+	ax2.plot(z,u) #label='n='+str(grid_iterations[i]))
+	ax1.plot(z,T)
+	ax3.plot(z,V)
+	#ax3.plot(z,gas.moleFraction(13), label='CH4')
+	#ax3.plot(z,gas.moleFractions(4), label='O2')
 	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
 
-print(comptime)	
+#print(f.componentNames())
 ##########################
 ax1.set_xlim(0.000, 0.020)
 plt.grid(True)
