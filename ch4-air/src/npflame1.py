@@ -11,33 +11,7 @@ from Cantera.num import array
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-
-# parameter values
-#
-# These are grouped here to simplify changing flame conditions
-p          =   OneAtm               # pressure
-tin_f      =   294.0                # fuel inlet temperature
-tin_o      =   300.0                # oxidizer inlet temperature
-phi	   =   1.8		    # Equivalence Ratio     
-rho_o	   =   1.177		    # Kg/m^3 @ 300K
-mdot_f     =   0.084                # kg/m^2/s
-rho_f      =   (0.657*(phi/(2+phi)))+(rho_o*2/(2+phi))                # Kg/m^3 @ 294K
-#mdot_o_np     =   2*mdot_f/phi	    # Kg/m^2/s
-mdot_o     =  0.084                 # Kg/m^2/s
-aircomp=[0.21,0.78,0.01]
-comp_o     =  'O2:0.21, N2:0.78, AR:0.01';  # air composition
-comp_f     =  'CH4:'+str(phi/(2+phi))+', O2:'+str(2*aircomp[0]/(2+phi))+', N2:'+str(2*aircomp[1]/(2+phi))+', AR:'+str(2*aircomp[2]/(2+phi))                      # fuel composition
-print(comp_f)
-flange_length = 0.02 
-
-alpha_0=((mdot_o/rho_o)+(mdot_f/rho_f))/(flange_length)
-alpha_o=((mdot_o/rho_o)*(1+((mdot_f/mdot_o)*((rho_o/rho_f)**0.5))))/flange_length
-print('Alpha_0:'+str(alpha_0))
-print('Alpha_ox:'+str(alpha_o)) 
-# distance between inlets is 2 cm; start with an evenly-spaced 50-point
-# grid
-
-grid_iterations=[10]#,50,100,200]
+####### Solution Controls ######################################
 
 tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
@@ -47,19 +21,33 @@ loglevel  = 0                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
-fig, (ax1,ax2,ax3)=plt.subplots(3)
-#ax1.set_title("Temperature Profile")
-#ax2.set_title("Velocity Profile")
-#ax3.set_title("Concentration Profile")
+###### Grid Initialization ######################################
+d=2*0.01 # flange distance in cm.
+initial_grid=np.linspace(0,1,num=10)*d
+phi_range=[2.2]
+# Iterating over  various equivalence ratios
+for i in range(len(phi_range)):
+############ Flame Parameters ###############################
+	p          =   OneAtm               # pressure
+	tin_f      =   294.0                # fuel inlet temperature
+	tin_o      =   300.0                # oxidizer inlet temperature
+	phi	   =   phi_range[i]         # Equivalence Ratio     
+	rho_o	   =   1.177		    # Kg/m^3 @ 300K
+	mdot_f     =   0.084                # kg/m^2/s
+	rho_f      =   (0.657*(phi/(2+phi)))+(rho_o*2/(2+phi)) # Kg/m^3 @ 294K
+	mdot_o     =  0.084                 # Kg/m^2/s
+	aircomp=[0.21,0.78,0.01]
+	comp_o     =  'O2:0.21, N2:0.78, AR:0.01';  # air composition
+	comp_f     =  'CH4:'+str(phi/(2+phi))+', O2:'+str(2*aircomp[0]/(2+phi))+', N2:'+str(2*aircomp[1]/(2+phi))+', AR:'+str(2*aircomp[2]/(2+phi))
+ 
+	# Cold Strain Rates # 
 
-comptime=[]
+	alpha_0=((mdot_o/rho_o)+(mdot_f/rho_f))/(d)
+	alpha_o=((mdot_o/rho_o)*(1+((mdot_f/mdot_o)*((rho_o/rho_f)**0.5))))/d			   
+	print('Phi:'+str(phi))
+	print('Alpha_0:'+str(alpha_0))
+	print('Alpha_ox:'+str(alpha_o))
 
-for i in range(len(grid_iterations)):
-
-	#initial_grid = np.array([0,0.0025,0.005,0.0075,0.008,0.009,0.01,0.0105,0.011,0.0115,0.0120,0.0125,0.01275,0.0130,0.01320,0.01340,0.01360,0.01380,0.0140,0.0141,0.0142,0.0143,0.014,0.0145,0.0146,0.0147,0.0148,0.0149,0.015,0.01525,0.01575,0.016,0.0165,0.017,0.018,0.019,0.020])
-	initial_grid=np.linspace(0,1,num=grid_iterations[i])*flange_length
-	dx=flange_length/len(initial_grid)
-                                   # disable 				   
 ################ create the gas object ########################
 #
 # This object will be used to evaluate all thermodynamic, kinetic,
@@ -104,6 +92,7 @@ for i in range(len(grid_iterations)):
 
 # First disable the energy equation and solve the problem without
 # refining the grid
+	start=time.time()
 	f.setRefineCriteria(ratio = 3, slope = 1, curve = 1, prune = 0)	
 	f.set(energy = 'off')
 	start=time.time()	
@@ -119,20 +108,16 @@ for i in range(len(grid_iterations)):
 	f.setRefineCriteria(ratio = 3, slope = 0.1, curve = 0.1, prune = 0)
 	f.set(energy = 'on')
 	f.solve(1)
-	#elapsed=time.time()-start
-	#comptime.append([grid_iterations[i],elapsed])
+	elapsed=time.time()-start
+	print('Solution Time:'+str(elapsed))
 # Save the solution
-	f.save('../results/npflame1.xml')
+	f.save('../results/CH4_Air_'+str(phi)+'.xml')
 	
 # write the velocity, temperature, and mole fractions to a CSV file
 	z = f.flame.grid()
 	T = f.T()
 	u = f.u()
 	V = f.V()
-	
-	umean=(np.sum(u)/len(u))	
-	strain_rate=umean/dx
-	print('mean strain rate'+str(strain_rate))
 
 	#results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
 	#filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
@@ -145,27 +130,21 @@ for i in range(len(grid_iterations)):
 #		fcsv.close()
 #	print 'solution saved to :'+filename
 
-	f.showSolution()
-	f.showStats()
-	ax2.plot(z,u) #label='n='+str(grid_iterations[i]))
-	ax1.plot(z,T)
-	ax3.plot(z,V)
-	#ax3.plot(z,gas.moleFraction(13), label='CH4')
-	#ax3.plot(z,gas.moleFractions(4), label='O2')
-	#u-profile.plot(u,T,label='n='+str(grid_iterations[i]))
-
-#print(f.componentNames())
-##########################
-ax1.set_xlim(0.000, 0.020)
-ax1.set_ylim(0,2500)
-#ax1.set_xlabel('Z(m)')
-ax1.set_ylabel('T(K)')
-ax2.set_xlim(0.000, 0.020)
-ax2.set_ylabel('u(m/s)')
-ax3.set_ylabel('V(1/s)')
-ax3.set_xlim(0.000, 0.020)
-ax1.grid(True)
-ax2.grid(True)
-ax3.grid(True)
-plt.savefig('../plots/zvU.png')
-###########################
+#	f.showSolution()
+#	f.showStats()
+############# Plots ##########
+	fig,(ax1,ax2,ax3)=plt.subplots(3)
+	ax2.plot(z,u,color='b')
+	ax1.plot(z,T,color='r')
+	ax3.plot(z,V,color='g')
+	ax1.set_xlim(0.000, 0.020)
+	ax1.set_ylim(0,2500)
+	ax1.set_ylabel('T(K)')
+	ax2.set_xlim(0.000, 0.020)
+	ax2.set_ylabel('u(m/s)')
+	ax3.set_ylabel('V(1/s)')
+	ax3.set_xlim(0.000, 0.020)
+	ax1.grid(True)
+	ax2.grid(True)
+	ax3.grid(True)
+	plt.savefig('../plots/CH4-Air_1D_'+str(phi)+'.png')
