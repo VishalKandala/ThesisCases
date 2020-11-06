@@ -37,7 +37,7 @@ print('Alpha_ox:'+str(alpha_o))
 # distance between inlets is 2 cm; start with an evenly-spaced 50-point
 # grid
 
-grid_iterations=[35]#,50,100,200]
+grid_iterations=[10]#,50,100,200]
 
 tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
