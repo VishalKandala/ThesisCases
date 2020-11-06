@@ -18,12 +18,12 @@ import time
 p          =   OneAtm               # pressure
 tin_f      =   294.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
-#phi	   =   0.5		    # Equivalence Ratio
-mdot_o     =   0.084           	    # kg/m^2/s
+phi	   =   1		    # Equivalence Ratio     
 rho_o	   =   1.177		    # Kg/m^3 @ 300K
 mdot_f     =   0.084                # kg/m^2/s
 rho_f      =   0.657                # Kg/m^3 @ 294K
-comp_o     =  'O2:0.21, N2:0.78, AR:0.01';   # air composition
+mdot_o     =   2*mdot_f/phi	    # Kg/m^2/s
+comp_o     =  'O2:0.21, N2:0.78, AR:0.01';  # air composition
 comp_f     =  'CH4:1';                      # fuel composition
 
 flange_length = 0.02 
@@ -46,9 +46,9 @@ loglevel  = 0                       # amount of diagnostic output (0
 refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
 fig, (ax1,ax2,ax3)=plt.subplots(3)
-ax1.set_title("Temperature Profile")
-ax2.set_title("Velocity Profile")
-ax3.set_title("Concentration Profile")
+#ax1.set_title("Temperature Profile")
+#ax2.set_title("Velocity Profile")
+#ax3.set_title("Concentration Profile")
 
 #h=GRI30()
 #h.set(T=tin_f,P=p,X=comp_o+comp_f) #'CH4:0.5, O2:0.105,N2:0.39,AR:0.005')
