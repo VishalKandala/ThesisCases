@@ -18,7 +18,7 @@ import time
 p          =   OneAtm               # pressure
 tin_f      =   294.0                # fuel inlet temperature
 tin_o      =   300.0                # oxidizer inlet temperature
-phi	   =   1		    # Equivalence Ratio     
+phi	   =   1.8		    # Equivalence Ratio     
 rho_o	   =   1.177		    # Kg/m^3 @ 300K
 mdot_f     =   0.084                # kg/m^2/s
 rho_f      =   0.657                # Kg/m^3 @ 294K
