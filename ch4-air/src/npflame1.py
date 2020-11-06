@@ -22,9 +22,10 @@ loglevel  = 0                       # amount of diagnostic output (0
 refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
 ###### Grid Initialization ######################################
-d=2*0.01 # flange distance in cm.
+d1=2 #flange distance in cm.
+d=d1*0.01 # flange distance in m.
 initial_grid=np.linspace(0,1,num=30)*d
-phi_range=[3.17] #[1.8,2.2,3.17]
+phi_range=[1.8,2.2,3.17]
 # Iterating over  various equivalence ratios
 for i in range(len(phi_range)):
 ############ Flame Parameters ###############################
@@ -111,7 +112,7 @@ for i in range(len(phi_range)):
 	elapsed=time.time()-start
 	print('Solution Time:'+str(elapsed))
 # Save the solution
-	f.save('../results/CH4_Air_'+str(phi)+'.xml')
+	f.save('../results/CH4_Air_'+str(phi)+'_'+str(d1).zfill(3)+'.xml')
 	
 # write the velocity, temperature, and mole fractions to a CSV file
 	z = f.flame.grid()
@@ -134,6 +135,7 @@ for i in range(len(phi_range)):
 #	f.showStats()
 ############# Plots ##########
 	fig,(ax1,ax2,ax3)=plt.subplots(3)
+	fig.suptitle('phi = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)+'s'+', a = '+str(alpha_o)+'(1/s)')
 	ax2.plot(z,u,color='b')
 	ax1.plot(z,T,color='r')
 	ax3.plot(z,V,color='g')
@@ -147,4 +149,4 @@ for i in range(len(phi_range)):
 	ax1.grid(True)
 	ax2.grid(True)
 	ax3.grid(True)
-	plt.savefig('../plots/CH4-Air_1D_'+str(phi)+'.png')
+	plt.savefig('../plots/CH4-Air_1D_'+str(phi)+'_'+str(d1).zfill(3)+'.png')
