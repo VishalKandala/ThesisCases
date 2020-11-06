@@ -15,16 +15,16 @@ import time
 
 tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
-tol_ts    = [1.0e-5, 1.0e-2]        # [rtol, atol] for time stepping
+tol_ts    = [1.0e-4, 1.0e-9]        # [rtol, atol] for time stepping
 
 loglevel  = 0                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
 ###### Grid Initialization ######################################
-d1_range=[2] #flange distance in cm.
+d1_range=[8] #flange distance in cm.
 phi_range=[1.8,2.2,3.17]
-grid_size=[10,20,30]
+grid_size=[40,50,60]
 for j in range(len(d1_range)):
 	d1=d1_range[j]
 	d=d1*0.01 # flange distance in cm.
@@ -36,9 +36,9 @@ for j in range(len(d1_range)):
 		tin_o      =   300.0                # oxidizer inlet temperature
 		phi	   =   phi_range[i]         # Equivalence Ratio     
 		rho_o	   =   1.177		    # Kg/m^3 @ 300K
-		mdot_f     =   0.084                # kg/m^2/s
+		mdot_f     =   0.18                # kg/m^2/s
 		rho_f      =   (0.657*(phi/(2+phi)))+(rho_o*2/(2+phi)) # Kg/m^3 @ 294K
-		mdot_o     =  0.084                 # Kg/m^2/s
+		mdot_o     =  1.02                 # Kg/m^2/s
 		aircomp=[0.21,0.78,0.01]
 		comp_o     =  'O2:0.21, N2:0.78, AR:0.01';  # air composition
 		comp_f     =  'CH4:'+str(phi/(2+phi))+', O2:'+str(2*aircomp[0]/(2+phi))+', N2:'+str(2*aircomp[1]/(2+phi))+', AR:'+str(2*aircomp[2]/(2+phi))
@@ -95,7 +95,7 @@ for j in range(len(d1_range)):
 
 # First disable the energy equation and solve the problem without
 # refining the grid
-		f.setRefineCriteria(ratio = 3, slope = 1, curve = 1, prune = 0)	
+		f.setRefineCriteria(ratio = 10, slope = 0.3, curve = 0.6, prune = 0)	
 		f.set(energy = 'off')
 		start=time.time()	
 		f.solve(loglevel, 1)
@@ -107,7 +107,7 @@ for j in range(len(d1_range)):
 # will be removed if the relative slope and curvature for all
 # components fall below the prune level. Set prune < min(slope,
 # curve), or to zero to disable removing grid points.
-		f.setRefineCriteria(ratio = 3, slope = 0.1, curve = 0.1, prune = 0)
+		f.setRefineCriteria(ratio = 20, slope = 0.4, curve = 0.8, prune = 0)
 		f.set(energy = 'on')
 		f.solve(loglevel,1)
 		elapsed=time.time()-start
@@ -137,14 +137,14 @@ for j in range(len(d1_range)):
 #	f.showStats()
 ############# Plots ##########
 		fig,(ax1,ax2,ax3)=plt.subplots(3)
-		fig.suptitle('$\phi = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)[:5]+'s'+', '+'a_{ox} = '+str(alpha_o)[:4]+'(1/s), V = '+str(vmax)[:4]+'$')
+		fig.suptitle('$\phi = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)[:4]+'s'+', '+'a_{ox} = '+str(alpha_o)[:3]+'(1/s), V = '+str(vmax)+'$')
 		ax2.plot(z,u,color='b')
 		ax1.plot(z,T,color='r')
 		ax3.plot(z,V,color='g')
-		ax1.set_xlim(0.000, d)
+		ax1.set_xlim(0.000, 0.020)
 		ax1.set_ylim(0,2500)
 		ax1.set_ylabel('T(K)')
-		ax2.set_xlim(0.000, d)
+		ax2.set_xlim(0.000, 0.020)
 		ax2.set_ylabel('u(m/s)')
 		ax3.set_ylabel('V(1/s)')
 		ax3.set_xlim(0.000, 0.020)
