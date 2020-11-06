@@ -25,8 +25,8 @@ refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 d1=2 #flange distance in cm.
 d=d1*0.01 # flange distance in m.
 
-phi_range=[3.17]
-grid_size=[30]
+phi_range=[1.8,2.2,3.17]
+grid_size=[10,20,30]
 
 # Iterating over  various equivalence ratios
 for i in range(len(phi_range)):
@@ -110,7 +110,7 @@ for i in range(len(phi_range)):
 # curve), or to zero to disable removing grid points.
 	f.setRefineCriteria(ratio = 3, slope = 0.1, curve = 0.1, prune = 0)
 	f.set(energy = 'on')
-	f.solve(1)
+	f.solve(loglevel,1)
 	elapsed=time.time()-start
 	print('Solution Time:'+str(elapsed))
 # Save the solution
@@ -121,6 +121,7 @@ for i in range(len(phi_range)):
 	T = f.T()
 	u = f.u()
 	V = f.V()
+	vmax=np.amax(V)
 
 	#results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
 	#filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
@@ -137,7 +138,7 @@ for i in range(len(phi_range)):
 #	f.showStats()
 ############# Plots ##########
 	fig,(ax1,ax2,ax3)=plt.subplots(3)
-	fig.suptitle('$\phi$ = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)[:4]+'s'+', '+'a = '+str(alpha_o)[:3]+'(1/s)')
+	fig.suptitle('$\phi = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)[:4]+'s'+', '+'\alpha = '+str(alpha_o)[:3]+'(1/s), V = '+str(vmax)+'$')
 	ax2.plot(z,u,color='b')
 	ax1.plot(z,T,color='r')
 	ax3.plot(z,V,color='g')
