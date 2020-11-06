@@ -15,7 +15,7 @@ import time
 
 tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
-tol_ts    = [1.0e-5, 1.0e-2]        # [rtol, atol] for time stepping
+tol_ts    = [1.0e-5, 1.0e-9]        # [rtol, atol] for time stepping
 
 loglevel  = 0                       # amount of diagnostic output (0
                                     # to 5)				    
@@ -23,8 +23,8 @@ refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
 ###### Grid Initialization ######################################
 d1_range=[1.94] #flange distance in cm.
-phi_range=[3.17]
-grid_size=[40]
+phi_range=[1.8,2.2,3.17]
+grid_size=[10,20,40]
 for j in range(len(d1_range)):
 	d1=d1_range[j]
 	d=d1*0.01 # flange distance in cm.
@@ -95,7 +95,7 @@ for j in range(len(d1_range)):
 
 # First disable the energy equation and solve the problem without
 # refining the grid
-		f.setRefineCriteria(ratio = 3, slope = 1, curve = 1, prune = 0)	
+		f.setRefineCriteria(ratio = 50, slope = 0.4, curve = 0.8, prune = 0)	
 		f.set(energy = 'off')
 		start=time.time()	
 		f.solve(loglevel, 1)
@@ -107,7 +107,7 @@ for j in range(len(d1_range)):
 # will be removed if the relative slope and curvature for all
 # components fall below the prune level. Set prune < min(slope,
 # curve), or to zero to disable removing grid points.
-		f.setRefineCriteria(ratio = 3, slope = 0.1, curve = 0.1, prune = 0)
+		f.setRefineCriteria(ratio = 10, slope = 0.1, curve = 0.2, prune = 0)
 		f.set(energy = 'on')
 		f.solve(loglevel,1)
 		elapsed=time.time()-start
