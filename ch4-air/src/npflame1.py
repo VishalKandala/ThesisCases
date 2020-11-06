@@ -24,8 +24,10 @@ refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 ###### Grid Initialization ######################################
 d1=2 #flange distance in cm.
 d=d1*0.01 # flange distance in m.
-initial_grid=np.linspace(0,1,num=30)*d
-phi_range=[1.8,2.2,3.17]
+
+phi_range=[3.17]
+grid_size=[30]
+
 # Iterating over  various equivalence ratios
 for i in range(len(phi_range)):
 ############ Flame Parameters ###############################
@@ -40,7 +42,7 @@ for i in range(len(phi_range)):
 	aircomp=[0.21,0.78,0.01]
 	comp_o     =  'O2:0.21, N2:0.78, AR:0.01';  # air composition
 	comp_f     =  'CH4:'+str(phi/(2+phi))+', O2:'+str(2*aircomp[0]/(2+phi))+', N2:'+str(2*aircomp[1]/(2+phi))+', AR:'+str(2*aircomp[2]/(2+phi))
- 
+	initial_grid=np.linspace(0,1,num=grid_size[i])*d 
 	# Cold Strain Rates # 
 
 	alpha_0=((mdot_o/rho_o)+(mdot_f/rho_f))/(d)
@@ -135,7 +137,7 @@ for i in range(len(phi_range)):
 #	f.showStats()
 ############# Plots ##########
 	fig,(ax1,ax2,ax3)=plt.subplots(3)
-	fig.suptitle('phi = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)+'s'+', a = '+str(alpha_o)+'(1/s)')
+	fig.suptitle('$\phi$ = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)[:4]+'s'+', '+'a = '+str(alpha_o)[:3]+'(1/s)')
 	ax2.plot(z,u,color='b')
 	ax1.plot(z,T,color='r')
 	ax3.plot(z,V,color='g')
