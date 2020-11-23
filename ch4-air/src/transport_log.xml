@@ -1,0 +1,267 @@
+<!--Collision Integral Polynomial Fits-->
+<Tstar_min>0.5</Tstar_min>
+<Tstar_max>100</Tstar_max>
+<dstar_fits>
+   <!--Collision integral fits at each tabulated T* vs. delta*.
+These polynomial fits are used to interpolate between columns (delta*)
+ in the Monchick and Mason tables. They are only used for nonzero delta*.-->
+   <!--polynomial coefficients not printed (log_level < 4)-->
+   <!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00134994 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>
+<!--max RMS errors in fits vs. delta*:
+      omega_22 =       0.00662161 
+      A*       =         0.002546 
+      B*       =       0.00276527 
+      C*       =       0.00127001 
+-->
+</dstar_fits>

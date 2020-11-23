@@ -22,9 +22,9 @@ loglevel  = 0                       # amount of diagnostic output (0
 refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
 ###### Grid Initialization ######################################
-d1_range=[2] #flange distance in cm.
-phi_range=[1.8,2.2,3.17]
-grid_size=[10,20,30]
+d1_range=[1.94] #flange distance in cm.
+phi_range=[3.17]#,2.2,3.17]
+grid_size=[10]#,20,30]
 for j in range(len(d1_range)):
 	d1=d1_range[j]
 	d=d1*0.01 # flange distance in cm.
@@ -42,7 +42,8 @@ for j in range(len(d1_range)):
 		aircomp=[0.21,0.78,0.01]
 		comp_o     =  'O2:0.21, N2:0.78, AR:0.01';  # air composition
 		comp_f     =  'CH4:'+str(phi/(2+phi))+', O2:'+str(2*aircomp[0]/(2+phi))+', N2:'+str(2*aircomp[1]/(2+phi))+', AR:'+str(2*aircomp[2]/(2+phi))
-		initial_grid=np.linspace(0,1,num=grid_size[i])*d 
+		initial_grid=d*np.linspace(0,1,num=10)
+	#	initial_grid=0.02*np.array([0.0,0.25,0.5,0.625,0.65,0.675,0.7,0.8,0.99,1])
 	# Cold Strain Rates # 
 
 		alpha_0=((mdot_o/rho_o)+(mdot_f/rho_f))/(d)
@@ -63,6 +64,7 @@ for j in range(len(d1_range)):
 # you need to convert from Chemkin format, use the ck2cti utility
 # program first.
 		gas = GRI30('Mix')
+		gas.addTransportModel('Multi')
 
 # create an object representing the counterflow flame configuration,
 # which consists of a fuel inlet on the left, the flow in the middle,
@@ -98,7 +100,9 @@ for j in range(len(d1_range)):
 		f.setRefineCriteria(ratio = 3, slope = 1, curve = 1, prune = 0)	
 		f.set(energy = 'off')
 		start=time.time()	
+	#	f.setTimeStep(1.0e-5,[1,2,5,10,20])	
 		f.solve(loglevel, 1)
+		f.save('../results/CH4_Air_a_'+str(phi)+'_no_energy.xml')
 # Now specify grid refinement criteria, turn on the energy equation,
 # and solve the problem again. The ratio parameter controls the
 # maximum size ratio between adjacent cells; slope and curve should be
@@ -109,35 +113,46 @@ for j in range(len(d1_range)):
 # curve), or to zero to disable removing grid points.
 		f.setRefineCriteria(ratio = 3, slope = 0.1, curve = 0.1, prune = 0)
 		f.set(energy = 'on')
+		f.solve(loglevel,1)	
+# Save the solution
+		f.save('../results/CH4_Air_a_'+str(phi)+'_energy_mix.xml')
+# Turn on Multi component Diffusion 
+		gas.switchTransportModel('Multi')
+		#print(gas.multiDiffCoeffs())
+		np.savetxt('multicoeff.txt', gas.multiDiffCoeffs())
+		f.flame.setTransportModel(gas)
+'''		
 		f.solve(loglevel,1)
+		f.save('../results/CH4_Air_a_'+str(phi)+'_energy_multi.xml')
+# Turn on Soret Thermal Diffusion
+		f.flame.enableSoret()
+		f.solve(loglevel,refine_grid)
+		f.save('../results/CH4_Air_a_'+str(phi)+'_energy_multi_soret.xml')
+# write the velocity, temperature, and mole fractions to a CSV file
 		elapsed=time.time()-start
 		print('Solution Time:'+str(elapsed))
-# Save the solution
-		f.save('../results/CH4_Air_'+str(phi)+'_'+str(d1).zfill(3)+'.xml')
-	
-# write the velocity, temperature, and mole fractions to a CSV file
 		z = f.flame.grid()
 		T = f.T()
 		u = f.u()
 		V = f.V()
 		vmax=np.amax(V)
+# Saving results
+		filename='../results/ch4-air_a_'+str(phi_range[i])+'_'+str(time.time())+'.csv'
+		fcsv = open(filename,'w')
+		writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)'] + list(gas.speciesNames()))
+		for n in range(f.flame.nPoints()):
+    			f.setGasState(n)
+    			writeCSV(fcsv, [z[n], u[n], V[n], T[n]]+list(gas.moleFractions()))
+		fcsv.close()
 
-	#results=np.array([z,T,u,V]) # saving all the arrays into a single 2-D array.
-	#filename='../results/npflame1_ref0_'+str(grid_iterations[i])+'.csv'
-	#np.savetxt(filename, results, delimiter=',')
-#	fcsv = open('../results/npflame1_'+str(grid_iterations[i])+'.csv',"w")
-#	writeCSV(fcsv, ['z (m)', 'u (m/s)', 'V (1/s)', 'T (K)']+list(gas.speciesNames()))
-#	for n in range(f.flame.nPoints()):
-#    		f.setGasState(n)
-#    		writeCSV(fcsv, [z[n], u[n], V[n], T[n]]+list(gas.moleFractions()))
-#		fcsv.close()
-#	print 'solution saved to :'+filename
+		print 'solution saved to :'+filename
+	
+		f.showSolution()
+		f.showStats()
 
-#	f.showSolution()
-#	f.showStats()
 ############# Plots ##########
 		fig,(ax1,ax2,ax3)=plt.subplots(3)
-		fig.suptitle('$\phi = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)[:5]+'s'+', '+'a_{ox} = '+str(alpha_o)[:4]+'(1/s), V = '+str(vmax)[:4]+'$')
+		fig.suptitle('$\phi = '+str(phi)+', d = '+str(d1)+'cm, t = '+str(elapsed)[:5]+'s'+', '+'a_{g} = '+str(alpha_o)[:4]+'(1/s), V = '+str(vmax)[:4]+'$')
 		ax2.plot(z,u,color='b')
 		ax1.plot(z,T,color='r')
 		ax3.plot(z,V,color='g')
@@ -152,3 +167,4 @@ for j in range(len(d1_range)):
 		ax2.grid(True)
 		ax3.grid(True)
 		plt.savefig('../plots/CH4-Air_1D_'+str(phi)+'_'+str(d1).zfill(3)+'.png')
+'''
