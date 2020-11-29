@@ -17,7 +17,7 @@ tol_ss    = [1.0e-5, 1.0e-6]        # [rtol, atol] for steady-state
                                     # problem
 tol_ts    = [1.0e-5, 1.0e-2]        # [rtol, atol] for time stepping
 
-loglevel  = 0                       # amount of diagnostic output (0
+loglevel  = 1                       # amount of diagnostic output (0
                                     # to 5)				    
 refine_grid = 1                     # 1 to enable refinement, 0 to disable.
 
@@ -121,7 +121,7 @@ for j in range(len(d1_range)):
 		#print(gas.multiDiffCoeffs())
 		np.savetxt('multicoeff.txt', gas.multiDiffCoeffs())
 		f.flame.setTransportModel(gas)
-'''		
+		
 		f.solve(loglevel,1)
 		f.save('../results/CH4_Air_a_'+str(phi)+'_energy_multi.xml')
 # Turn on Soret Thermal Diffusion
@@ -167,4 +167,3 @@ for j in range(len(d1_range)):
 		ax2.grid(True)
 		ax3.grid(True)
 		plt.savefig('../plots/CH4-Air_1D_'+str(phi)+'_'+str(d1).zfill(3)+'.png')
-'''
