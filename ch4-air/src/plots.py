@@ -59,6 +59,12 @@ f2.init(fuel = 'CH4')
 filename='../results/CH4_Air_a_3.17_energy_multi.xml'
 f2.restore(file=filename, id='solution')
 
+plt.figure(1)
 plt.plot(f1.flame.grid(),f1.T())
 plt.plot(f2.flame.grid(),f2.T())
 plt.savefig('../plots/tempcomp.png')
+
+plt.figure(2)
+plt.plot(f1.flame.grid(),f1.V())
+plt.savefig('../plots/ch4comp.png')
+
